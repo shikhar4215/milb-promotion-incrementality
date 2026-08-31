@@ -167,6 +167,35 @@ def fetch_game_detail(game_pk: int) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Deduplication
+# ---------------------------------------------------------------------------
+# A game that is rained out and made up as part of a doubleheader comes back
+# from the API twice under the SAME game_pk: once as the original "Postponed"
+# entry, and once as the completed makeup. Keep the row that actually happened.
+STATUS_PRIORITY = {
+    "Final": 0,
+    "Completed Early": 1,
+    "Suspended": 2,
+    "In Progress": 3,
+    "Pre-Game": 4,
+    "Scheduled": 5,
+    "Postponed": 6,
+    "Cancelled": 7,
+}
+
+
+def dedupe_schedule(df: pd.DataFrame) -> pd.DataFrame:
+    """Collapse repeated game_pk rows, keeping the most-played status."""
+    ranked = df.assign(_rank=df["status"].map(STATUS_PRIORITY).fillna(99))
+    ranked = ranked.sort_values(["game_pk", "_rank"])
+    return (
+        ranked.drop_duplicates(subset="game_pk", keep="first")
+        .drop(columns="_rank")
+        .reset_index(drop=True)
+    )
+
+
+# ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
 def main() -> None:
@@ -195,6 +224,13 @@ def main() -> None:
     schedule_df = pd.DataFrame(all_games)
     if schedule_df.empty:
         raise SystemExit("No games found. Check network access and season list.")
+
+    before = len(schedule_df)
+    schedule_df = dedupe_schedule(schedule_df)
+    removed = before - len(schedule_df)
+    if removed:
+        print(f"\n  deduped {removed} repeated game_pk rows "
+              f"(postponed games relisted as doubleheader makeups)")
 
     schedule_path = config.DATA_INTERIM / "schedule.csv"
     schedule_df.to_csv(schedule_path, index=False)
