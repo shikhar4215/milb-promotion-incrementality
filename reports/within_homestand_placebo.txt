@@ -1,0 +1,12 @@
+
+=== PLACEBO - giveaway position randomised within homestand ===
+  homestands 116   dates 755   giveaways 183   within-R2 0.752
+
+  offset      n     effect          95% CI            p
+    -2       84    +0.57%   [ -7.03,  +8.79]   0.887
+    -1      101    +3.52%   [ -4.28, +11.97]   0.387
+    +0      116    +3.69%   [ -2.52, +10.29]   0.250  <-- giveaway
+    +1      104    -0.36%   [ -7.44,  +7.26]   0.924
+    +2       84    +4.11%   [ -3.68, +12.53]   0.310
+
+  every effect here should be indistinguishable from zero.

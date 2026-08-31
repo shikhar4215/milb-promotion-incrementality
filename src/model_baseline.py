@@ -78,6 +78,7 @@ def main() -> None:
     args = ap.parse_args()
 
     config.ensure_dirs()
+    scope_tag = "all_clubs" if args.all_clubs else "eligible"
     df = load(args.all_clubs)
 
     # --- clean controls ----------------------------------------------------
@@ -129,7 +130,7 @@ def main() -> None:
                      "ci_low_pct": lo, "ci_high_pct": hi})
 
     out = pd.DataFrame(rows)
-    out.to_csv(config.REPORTS / "lift_by_offset.csv", index=False)
+    out.to_csv(config.REPORTS / f"lift_by_offset_{scope_tag}.csv", index=False)
 
     # --- headline ----------------------------------------------------------
     treated = df[df["offset"] == 0]
@@ -156,11 +157,12 @@ def main() -> None:
         print("\n  No evidence of demand being pulled forward - adjacent dates "
               "are at or above their own baselines.")
 
-    df.to_csv(config.DATA_PROCESSED / "games_with_residuals.csv", index=False)
-    with open(config.REPORTS / "baseline_summary.txt", "w") as f:
+    df.to_csv(config.DATA_PROCESSED / f"games_with_residuals_{scope_tag}.csv", index=False)
+    with open(config.REPORTS / f"baseline_summary_{scope_tag}.txt", "w") as f:
         f.write(str(model.summary()))
-    print(f"\n-> reports/lift_by_offset.csv, reports/baseline_summary.txt")
-    print(f"-> data/processed/games_with_residuals.csv")
+    print(f"\n-> reports/lift_by_offset_{scope_tag}.csv")
+    print(f"-> reports/baseline_summary_{scope_tag}.txt")
+    print(f"-> data/processed/games_with_residuals_{scope_tag}.csv")
 
 
 if __name__ == "__main__":

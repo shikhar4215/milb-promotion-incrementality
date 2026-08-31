@@ -1,0 +1,14 @@
+scope: 17 clubs with complete season promo releases
+home dates: 1,062   giveaways: 198
+
+=== 1. out-of-sample predictive power ===
+  cross-validated R-squared : 0.617   (n = 356)
+  median absolute error     : 821 fans
+  typical crowd             : 5,139 fans
+
+=== 2. placebo test (400 draws, matched on club and weekday) ===
+  placebo lift  mean -1.20%   sd 1.33pp
+  placebo range [-3.80%, +1.22%]
+  observed lift +4.63%
+  share of placebos at least as extreme: 0.003
+  -> the observed lift is outside what the pipeline produces by chance
