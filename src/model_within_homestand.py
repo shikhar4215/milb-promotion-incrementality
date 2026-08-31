@@ -51,7 +51,7 @@ class _Tee:
         for s in self.streams: s.flush()
 
 
-def prepare(all_clubs: bool = False) -> pd.DataFrame:
+def prepare(all_clubs: bool = False, drop_saturday: bool = False) -> pd.DataFrame:
     df = pd.read_csv(config.DATA_PROCESSED / "games_analysis.csv")
     df = df[df["analysis_eligible"] == 1] if not all_clubs else df[df["club_coverage"] != "no_source_found"]
     df = df.copy()
@@ -67,6 +67,12 @@ def prepare(all_clubs: bool = False) -> pd.DataFrame:
     has_gv = df.groupby("homestand_id")["has_giveaway"].max()
     keep = sizes[(sizes >= MIN_DATES) & (has_gv.reindex(sizes.index) == 1)].index
     df = df[df["homestand_id"].isin(keep)].copy()
+
+    if drop_saturday:
+        # Saturday giveaways are what locks homestand position to weekday.
+        # Dropping them leaves less data but real independent variation.
+        sat = df[(df["has_giveaway"] == 1) & (df["day_of_week"] == "Saturday")]["homestand_id"].unique()
+        df = df[~df["homestand_id"].isin(sat)].copy()
 
     for o in OFFSETS:
         df[f"off_{'m' if o < 0 else 'p'}{abs(o)}"] = (df["offset"] == o).astype(int)
@@ -104,18 +110,27 @@ def main() -> None:
     ap.add_argument("--placebo", action="store_true",
                     help="Re-run with giveaway positions shuffled inside each homestand.")
     ap.add_argument("--all-clubs", action="store_true")
+    ap.add_argument("--no-saturday", action="store_true",
+                    help="Drop homestands whose giveaway fell on a Saturday, breaking "
+                         "the near-collinearity between homestand position and weekday.")
     args = ap.parse_args()
 
     config.ensure_dirs()
-    out = config.REPORTS / ("within_homestand_placebo.txt" if args.placebo
-                            else "within_homestand.txt")
+    name = "within_homestand"
+    if args.placebo:
+        name += "_placebo"
+    if args.no_saturday:
+        name += "_nosaturday"
+    out = config.REPORTS / f"{name}.txt"
     handle = open(out, "w")
     sys.stdout = _Tee(sys.__stdout__, handle)
 
-    df = prepare(args.all_clubs)
+    df = prepare(args.all_clubs, drop_saturday=args.no_saturday)
 
     if not args.placebo:
-        res = fit_and_report(df, "Within-homestand estimates")
+        label = ("Within-homestand estimates, Saturday giveaways excluded"
+                 if args.no_saturday else "Within-homestand estimates")
+        res = fit_and_report(df, label)
         lift = res[0][0]
         before = res[-1][0]
         print("\n  reference category: dates 3+ games from the giveaway, same homestand")

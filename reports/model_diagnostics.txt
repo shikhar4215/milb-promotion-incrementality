@@ -7,8 +7,10 @@ home dates: 1,062   giveaways: 198
   typical crowd             : 5,139 fans
 
 === 2. placebo test (400 draws, matched on club and weekday) ===
-  placebo lift  mean -1.20%   sd 1.33pp
-  placebo range [-3.80%, +1.22%]
+  WARNING - untreated pool smaller than treated group for: Monday (0.0x), Saturday (0.6x)
+  placebo inference for those weekdays is not reliable
+  placebo lift  mean -0.85%   sd 0.89pp
+  placebo range [-2.56%, +1.00%]
   observed lift +4.63%
-  share of placebos at least as extreme: 0.003
+  share of placebos at least as extreme: 0.000
   -> the observed lift is outside what the pipeline produces by chance

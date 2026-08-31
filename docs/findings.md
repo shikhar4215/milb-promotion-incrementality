@@ -75,6 +75,59 @@ binding constraint is the promotional calendar, which currently exists only for
 highest-value extension to this project, and it is what would turn the
 displacement question from unanswerable into answerable.
 
+## Weekday breakdown: attempted, and not supported
+
+Since homestand position and weekday are near-collinear, the natural follow-up
+was whether the giveaway effect differs by night. It does not resolve cleanly,
+and the attempt is documented because the failure is informative.
+
+| Night | n | Lift | 95% CI | Placebo pool |
+|---|---|---|---|---|
+| Tuesday | 11 | +15.8% | [−4.5, +40.3] | 43 |
+| Wednesday | 24 | −3.7% | [−12.2, +5.6] | 45 |
+| Thursday | 14 | −14.5% | [−21.2, −7.2] | 44 |
+| Friday | 46 | +4.8% | [−5.0, +15.7] | 48 |
+| Saturday | 79 | +9.9% | [+3.8, +16.4] | **50 — smaller than treated group** |
+| Sunday | 23 | +1.0% | [−11.0, +14.7] | 48 |
+
+Only Saturday and Thursday have intervals excluding zero. Thursday rests on 14
+giveaways and is most plausibly selection — clubs scheduling promotions onto
+Thursdays they already expected to be soft, which the model cannot observe.
+
+**Saturday is the one that matters and the one we cannot validate.** 79 of 129
+eligible Saturdays carried a giveaway. Nashville and Sugar Land ran one on
+*every* home Saturday. There are 50 giveaway-free Saturdays league-wide, fewer
+than the treated group, so no placebo can be constructed and the counterfactual
+rests on a thin and possibly unrepresentative set of dates.
+
+### A caution on the placebo p-values
+
+Placebo p-values throughout this project run smaller than the analytic
+confidence intervals justify — Friday reports p=0.000 alongside a CI spanning
+[−5.0%, +15.7%]. The cause is pool size: draws of 46 from a pool of 48 overlap
+almost entirely, so the placebo distribution understates true sampling
+variability. **The confidence intervals are the honest inference. Placebo tests
+are used here as a directional check that the pipeline is not manufacturing
+effects, not as significance tests.**
+
+An earlier version of the placebo matched draws on club as well as weekday,
+which shrank the Saturday pool below the treated group and silently truncated
+the draws. That was corrected to weekday-only matching, which is sufficient
+because residuals are already club-adjusted by the model's fixed effects.
+
+## Where this actually lands
+
+One season supports a **pooled giveaway lift of roughly 5%**, with a confidence
+interval that barely excludes zero, and little else. It does not support the
+displacement analysis the project was built around, and it does not support a
+reliable weekday breakdown.
+
+The binding constraint is not model choice. It is that promotional scheduling
+is highly structured — Saturdays, weekends, good opponents — so within a single
+season the control group for the most common promotional slot barely exists.
+Recovering 2024 and 2025 giveaway calendars is what would make both questions
+answerable.
+
 ## Secondary caveats
 
 - Giveaway coverage is complete for only 17 of 30 clubs. Adding the

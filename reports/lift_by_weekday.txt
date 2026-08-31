@@ -1,0 +1,26 @@
+scope: 17 clubs with complete season promo releases
+home dates: 1,062   giveaways: 198
+
+
+=== giveaway lift by night of the week ===
+  each weekday's lift, against placebo giveaways on the same weekday
+
+  night        n    lift        95% CI           placebo  pool      p
+  Tuesday      11   +15.8%  [  -4.5,  +40.3]     +0.5%     43   0.010 *
+  Wednesday    24    -3.7%  [ -12.2,   +5.6]     +1.4%     45   0.210   pool thin, treat p with caution
+  Thursday     14   -14.5%  [ -21.2,   -7.2]     -0.8%     44   0.004 *
+  Friday       46    +4.8%  [  -5.0,  +15.7]     -1.0%     48   0.000 *   pool thin, treat p with caution
+  Saturday     79    +9.9%  [  +3.8,  +16.4]     +nan%     50   nan   POOL TOO SMALL - placebo not valid
+  Sunday       23    +1.0%  [ -11.0,  +14.7]     +2.5%     48   0.670
+
+=== in fans, not percentages ===
+  night        giveaways   baseline crowd   fans added   total added
+  Tuesday         11          5,833         +919       +10,107
+  Wednesday       24          5,117         -190        -4,554
+  Thursday        14          6,047         -877       -12,276
+  Friday          46          5,746         +278       +12,788
+  Saturday        79          6,352         +629       +49,707
+  Sunday          23          6,905          +70        +1,607
+
+  weeknight (Tue-Thu) mean lift: -0.8%  across 49 giveaways
+  Fri/Sat mean lift:             +7.4%  across 125 giveaways

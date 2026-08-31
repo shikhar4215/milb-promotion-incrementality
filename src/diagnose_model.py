@@ -74,16 +74,27 @@ def placebo(df: pd.DataFrame, model, n_draws: int = N_PLACEBO, seed: int = SEED)
         print("  no untreated pool available")
         return
 
-    target_mix = real.groupby(["team_id", "day_of_week"]).size()
-    effects = []
+    # Match on weekday only. Club is already absorbed by the model's fixed
+    # effects, and club-matching shrinks the Saturday pool below the treated
+    # group, which truncates draws and understates placebo variance.
+    target_mix = real.groupby("day_of_week").size()
+    shortfalls = {d: len(pool[pool["day_of_week"] == d]) / c
+                  for d, c in target_mix.items() if c}
+    thin = {d: r for d, r in shortfalls.items() if r < 1}
+    if thin:
+        print(f"  WARNING - untreated pool smaller than treated group for: "
+              f"{', '.join(f'{d} ({r:.1f}x)' for d, r in thin.items())}")
+        print("  placebo inference for those weekdays is not reliable")
 
+    effects = []
     for _ in range(n_draws):
         picks = []
-        for (team, dow), count in target_mix.items():
-            cand = pool[(pool["team_id"] == team) & (pool["day_of_week"] == dow)]
+        for dow, count in target_mix.items():
+            cand = pool[pool["day_of_week"] == dow]
             if len(cand) == 0:
                 continue
-            picks.append(cand.sample(min(count, len(cand)), replace=False, random_state=int(rng.integers(1e9))))
+            picks.append(cand.sample(min(count, len(cand)), replace=False,
+                                     random_state=int(rng.integers(1e9))))
         if not picks:
             continue
         fake = pd.concat(picks)
