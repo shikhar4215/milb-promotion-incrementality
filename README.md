@@ -3,8 +3,15 @@
 A causal analysis of promotional giveaways across all 30 Triple-A baseball clubs,
 using game-level attendance, ballpark weather, and hand-verified promotional calendars.
 
-**Status: in progress.** Data collection and validation are complete. Modelling and the
-Power BI dashboard are next. See [Roadmap](#roadmap).
+**Status: analysis complete, dashboard in progress.**
+
+**Headline:** giveaways add roughly **5%** to a Triple-A crowd — a few hundred fans on a
+gate of about 6,000, far below how promotions are usually described.
+
+**The question this project set out to answer could not be answered with one season,
+and the write-up says so.** The displacement result appeared, survived one
+specification, and collapsed under another. Section [What the data does not
+support](#what-the-data-does-not-support) explains exactly why, and what would fix it.
 
 ---
 
@@ -17,15 +24,18 @@ But if the two games on either side of it run 1,000 short of their own baselines
 club did not create 3,000 fans. It moved them. Same customers, same wallets, different
 night, minus the cost of 3,000 bobbleheads.
 
-This project separates the two:
+This project set out to separate the two:
 
 - **Lift** — how much larger is the crowd than that date should have drawn, given the
   opponent, day of week, weather, and time of season?
 - **Displacement** — do the surrounding games in the same homestand come in *below*
   their own baselines?
 
-**Net incremental = lift − displacement.** Ranking promotions by net rather than raw
-lift is the point of the exercise.
+**It measured the first and could not establish the second.** That is the honest
+result, and the reason is specific rather than a shrug: giveaways are scheduled on
+Saturdays, homestands run Tuesday to Sunday, so "the day before a giveaway" is largely
+a synonym for "Friday". Position in a homestand and day of week are close to the same
+variable, and one season contains no leverage to separate them.
 
 ## Data
 
@@ -40,6 +50,58 @@ needs no key. Verified working back to 2012.
 
 **2026 season, after cleaning:** 1,958 games played, 96.5% carrying attendance, 100%
 carrying weather. Median crowd 5,189 (632–13,675).
+
+## Results
+
+### What the data supports
+
+| Specification | Effect on the giveaway date | 95% CI |
+|---|---|---|
+| League baseline, 17 complete-coverage clubs | **+4.6%** | [+0.5, +8.9] |
+| League baseline, 28 clubs incl. incomplete | +6.1% | [+2.3, +10.0] |
+| Within-homestand fixed effects | +8.3% | [−0.7, +18.1] |
+
+Consistent in direction across every specification, and the placebo test supports it:
+400 fake giveaway sets matched on weekday produce a mean effect of −0.9%, against an
+observed +4.6%.
+
+In fans, that is roughly **280 extra people on a 6,073 baseline**. Real, and much
+smaller than the folklore.
+
+![Giveaway effect by night](reports/figures/fig2_lift_by_night.png)
+
+### What the data does not support
+
+Displacement. The estimates are not robust across specification:
+
+| Position | League baseline | Within-homestand |
+|---|---|---|
+| Day before | −6.6% [−11.2, −1.9] | +0.2% (p=0.97) |
+| Giveaway | +4.6% [+0.5, +8.9] | +8.3% (p=0.07) |
+| Day after | +5.7% [−0.6, +12.4] | +9.0% (p=0.07) |
+
+A significant dip the day before disappears entirely under homestand fixed effects.
+When a result flips that hard on a defensible change of specification, the result is
+the specification, not the world.
+
+![Specification check](reports/figures/fig3_specification_check.png)
+
+### The structural finding
+
+The reason both questions are hard is the same, and it is worth more than either answer
+would have been: **promotional scheduling is so concentrated that the counterfactual
+barely exists.** 79 of 129 eligible Saturdays carried a giveaway. Nashville and Sugar
+Land ran one on *every* home Saturday. There are fewer giveaway-free Saturdays in the
+league-season than there are treated ones.
+
+![Scheduling concentration](reports/figures/fig4_scheduling_concentration.png)
+
+### What actually drives attendance
+
+Before any promotion is involved: night of the week dominates, temperature matters and
+peaks at 75-85°F, and conditions barely register once temperature is known.
+
+![Attendance drivers](reports/figures/fig1_attendance_drivers.png)
 
 ## Design decisions
 
@@ -126,7 +188,9 @@ interrupted run resumes where it stopped.
 - [x] Source evaluation and feasibility
 - [x] Game log, attendance and weather extraction
 - [x] Giveaway calendar collection and date validation
-- [ ] Feature engineering: homestand structure, date dimension
-- [ ] Baseline attendance model (the counterfactual)
-- [ ] Lift and displacement estimation
+- [x] Feature engineering: homestand structure, date dimension
+- [x] Baseline attendance model (the counterfactual)
+- [x] Lift and displacement estimation, with placebo and specification checks
 - [ ] Power BI dashboard
+- [ ] Recover 2024 and 2025 giveaway calendars — the extension that would make
+      displacement estimable
