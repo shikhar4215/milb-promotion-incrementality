@@ -261,6 +261,38 @@ def fig_concentration(fct: pd.DataFrame, out: Path) -> None:
     plt.close(fig)
 
 
+def fig_giveaway_effect(fct: pd.DataFrame, out: Path) -> None:
+    """The Page 2 headline: giveaway dates against their own expectation.
+
+    Averaged in log space and converted back. The arithmetic mean of a percent
+    column is skewed upward - it would put untreated dates at +4% and make the
+    baseline look biased when it is not.
+    """
+    e = fct[fct["analysis_eligible"] == 1]
+    g = e.groupby("giveaway_label")
+    order = ["No giveaway", "Giveaway"]
+    eff = [(np.exp(g.get_group(k)["residual"].mean()) - 1) * 100 for k in order]
+    ns = [len(g.get_group(k)) for k in order]
+
+    fig, ax = plt.subplots(figsize=(7.6, 4.6))
+    ax.axhline(0, color=BASELINE, linewidth=1.4, zorder=1)
+    ax.bar(range(2), eff, color=[MUTED, S1], width=0.5, zorder=2)
+    for i, (v, n) in enumerate(zip(eff, ns)):
+        ax.text(i, v + (0.28 if v >= 0 else -0.28), f"{v:+.1f}%",
+                ha="center", va="bottom" if v >= 0 else "top",
+                color=INK2, fontsize=11, fontweight="600")
+    ax.set_xticks(range(2))
+    ax.set_xticklabels([f"{k}\nn={n}" for k, n in zip(order, ns)])
+    _style(ax, "Giveaway dates draw 4.6% above their own expectation",
+           "Difference from model-predicted attendance, 17 complete-coverage clubs.\n"
+           "Untreated dates sit near zero, which is the baseline behaving.",
+           ylabel="Difference from expected (%)")
+    ax.set_ylim(min(eff) - 1.6, max(eff) + 1.8)
+    fig.tight_layout()
+    fig.savefig(out / "fig5_giveaway_effect.png", dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--bi-dir", default=None)
@@ -281,6 +313,7 @@ def main() -> None:
     fig_lift_by_night(res, out)
     fig_specification(res, out)
     fig_concentration(fct, out)
+    fig_giveaway_effect(fct, out)
 
     for p in sorted(out.glob("*.png")):
         print(f"  {p.name:<40} {p.stat().st_size/1024:>7,.0f} KB")
@@ -288,3 +321,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
