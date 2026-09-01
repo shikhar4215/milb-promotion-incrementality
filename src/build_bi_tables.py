@@ -79,8 +79,11 @@ def main() -> None:
         fct["predicted_attendance"].notna(),
         (fct["attendance"] / fct["predicted_attendance"] - 1) * 100, np.nan)
     fct["giveaway_label"] = np.where(fct["has_giveaway"] == 1, "Giveaway", "No giveaway")
-    fct["temp_band"] = pd.cut(fct["temp_f"], [-99, 55, 65, 75, 85, 999],
-                              labels=["Under 55F", "55-65F", "65-75F", "75-85F", "85F+"])
+    bands = ["Under 55F", "55-65F", "65-75F", "75-85F", "85F+"]
+    fct["temp_band"] = pd.cut(fct["temp_f"], [-99, 55, 65, 75, 85, 999], labels=bands)
+    # Power BI sorts text alphabetically, which would put "Under 55F" last.
+    # Ship an explicit sort key so the axis reads cold to hot.
+    fct["temp_band_num"] = fct["temp_band"].map({b: i for i, b in enumerate(bands)})
     fct["offset_label"] = fct["games_from_giveaway"].map(
         lambda o: "Giveaway" if o == 0 else
         (f"{int(o):+d} games" if pd.notna(o) and abs(o) <= 2 else

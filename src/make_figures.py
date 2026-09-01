@@ -72,7 +72,7 @@ def _style(ax, title, subtitle=None, xlabel=None, ylabel=None):
 # ---------------------------------------------------------------------------
 def fig_drivers(fct: pd.DataFrame, out: Path) -> None:
     """What moves attendance before any promotion is involved."""
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
+    fig, axes = plt.subplots(1, 3, figsize=(15.5, 4.4))
 
     d = (fct.groupby("day_of_week")["attendance"].agg(["mean", "size"])
          .reindex([x for x in DAY_ORDER if x in fct["day_of_week"].unique()]).dropna())
@@ -88,10 +88,24 @@ def fig_drivers(fct: pd.DataFrame, out: Path) -> None:
            "Mean crowd, all Triple-A home dates, 2026", ylabel="Fans")
     ax.set_ylim(0, d["mean"].max() * 1.16)
 
+    bands = ["Under 55F", "55-65F", "65-75F", "75-85F", "85F+"]
+    t = (fct.groupby("temp_band")["attendance"].agg(["mean", "size"])
+         .reindex(bands).dropna())
+    ax = axes[1]
+    ax.bar(range(len(t)), t["mean"], color=S1, width=0.62)
+    ax.set_xticks(range(len(t)))
+    ax.set_xticklabels([f'{b.replace("F", chr(176) + "F").replace("Under ", "<")}\nn={int(n)}'
+                        for b, n in zip(t.index, t["size"])], fontsize=9)
+    for i, v in enumerate(t["mean"]):
+        ax.text(i, v + 90, f"{v:,.0f}", ha="center", color=INK2, fontsize=9)
+    _style(ax, "Attendance peaks at 75-85\u00b0F",
+           "Mean crowd by temperature at first pitch", ylabel="Fans")
+    ax.set_ylim(0, t["mean"].max() * 1.16)
+
     w = (fct[fct["weather_group"] != "Unknown"]
          .groupby("weather_group")["attendance"].agg(["mean", "size"])
          .reindex(["Clear", "Cloudy", "Precipitation"]).dropna())
-    ax = axes[1]
+    ax = axes[2]
     ax.bar(range(len(w)), w["mean"], color=S1, width=0.5)
     ax.set_xticks(range(len(w)))
     ax.set_xticklabels([f"{i}\nn={int(n):,}" for i, n in zip(w.index, w["size"])])
