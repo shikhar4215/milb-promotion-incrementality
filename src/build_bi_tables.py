@@ -36,15 +36,22 @@ def main() -> None:
     resid = pd.read_csv(config.DATA_PROCESSED / "games_with_residuals_eligible.csv")
 
     # ---- dim_club --------------------------------------------------------
+    # One row per club. Grouping by venue as well would split any club that
+    # played away from its usual park - Iowa hosted a game at the Field of
+    # Dreams site - and a duplicated key breaks the relationship to the fact
+    # table. Venue is reduced to the club's primary park instead.
     dim_club = (
-        src.groupby(["team_id", "home_team", "league_name", "venue_name"])
+        src.groupby(["team_id", "home_team", "league_name"])
         .agg(home_dates=("date", "size"),
              mean_attendance=("attendance", "mean"),
              max_attendance=("attendance", "max"),
-             giveaways=("has_giveaway", "sum"))
+             giveaways=("has_giveaway", "sum"),
+             primary_venue=("venue_name", lambda v: v.mode().iat[0]),
+             venues_used=("venue_name", "nunique"))
         .reset_index()
-        .rename(columns={"home_team": "club", "league_name": "league", "venue_name": "venue"})
+        .rename(columns={"home_team": "club", "league_name": "league"})
     )
+    assert dim_club["team_id"].is_unique, "dim_club[team_id] must be unique"
     cov = src.groupby("team_id")["club_coverage"].first()
     dim_club["promo_coverage"] = dim_club["team_id"].map(cov)
     dim_club["coverage_label"] = dim_club["promo_coverage"].map({

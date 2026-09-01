@@ -72,7 +72,8 @@ def _style(ax, title, subtitle=None, xlabel=None, ylabel=None):
 # ---------------------------------------------------------------------------
 def fig_drivers(fct: pd.DataFrame, out: Path) -> None:
     """What moves attendance before any promotion is involved."""
-    fig, axes = plt.subplots(1, 3, figsize=(15.5, 4.4))
+    fig, axes = plt.subplots(2, 2, figsize=(13, 8.6))
+    axes = axes.ravel()
 
     d = (fct.groupby("day_of_week")["attendance"].agg(["mean", "size"])
          .reindex([x for x in DAY_ORDER if x in fct["day_of_week"].unique()]).dropna())
@@ -115,7 +116,21 @@ def fig_drivers(fct: pd.DataFrame, out: Path) -> None:
            "Conditions recorded at the ballpark", ylabel="Fans")
     ax.set_ylim(0, w["mean"].max() * 1.16)
 
-    fig.tight_layout()
+    months = ["March", "April", "May", "June", "July", "August", "September"]
+    m = (fct.groupby("month_name")["attendance"].agg(["mean", "size"])
+         .reindex(months).dropna())
+    ax = axes[3]
+    ax.plot(range(len(m)), m["mean"], color=S1, linewidth=2,
+            marker="o", markersize=8, markeredgecolor=SURFACE, markeredgewidth=1.6)
+    for i, v in enumerate(m["mean"]):
+        ax.text(i, v + 150, f"{v:,.0f}", ha="center", color=INK2, fontsize=9)
+    ax.set_xticks(range(len(m)))
+    ax.set_xticklabels([f"{x[:3]}\nn={int(n)}" for x, n in zip(m.index, m["size"])], fontsize=9)
+    _style(ax, "Attendance across the season",
+           "Mean crowd by month", ylabel="Fans")
+    ax.set_ylim(min(m["mean"]) * 0.82, m["mean"].max() * 1.12)
+
+    fig.tight_layout(h_pad=3.4, w_pad=3.0)
     fig.savefig(out / "fig1_attendance_drivers.png", dpi=160, bbox_inches="tight")
     plt.close(fig)
 

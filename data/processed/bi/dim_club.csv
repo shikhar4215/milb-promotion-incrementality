@@ -1,32 +1,31 @@
-team_id,club,league,venue,home_dates,mean_attendance,max_attendance,giveaways,promo_coverage,coverage_label,analysis_eligible,giveaway_rate
-102,Round Rock Express,Pacific Coast League,Dell Diamond,63,4971.0,11417.0,11,full_season_release,Complete,1,0.1746031746031746
-105,Sacramento River Cats,Pacific Coast League,Sutter Health Park,60,3956.0,8332.0,11,full_season_release,Complete,1,0.18333333333333332
-234,Durham Bulls,International League,Durham Bulls Athletic Park,67,6142.0,11682.0,1,partial_assembled,Partial - known incomplete,0,0.014925373134328358
-235,Memphis Redbirds,International League,AutoZone Park,61,3131.0,10269.0,12,partial_assembled,Partial - known incomplete,0,0.19672131147540983
-238,Oklahoma City Comets,Pacific Coast League,Chickasaw Bricktown Ballpark,67,5588.0,11290.0,6,full_season_release,Complete,1,0.08955223880597014
-342,Albuquerque Isotopes,Pacific Coast League,Isotopes Park,62,6703.0,12053.0,15,full_season_release,Complete,1,0.24193548387096775
-400,Las Vegas Aviators,Pacific Coast League,Las Vegas Ballpark,69,5984.0,12390.0,6,partial_assembled,Partial - known incomplete,0,0.08695652173913043
-416,Louisville Bats,International League,Louisville Slugger Field,65,4314.0,9802.0,2,partial_assembled,Partial - known incomplete,0,0.03076923076923077
-422,Buffalo Bisons,International League,Sahlen Field,58,6245.0,13590.0,8,full_season_release,Complete,1,0.13793103448275862
-431,Gwinnett Stripers,International League,Gwinnett Field,59,2409.0,7267.0,9,full_season_release,Complete,1,0.15254237288135594
-445,Columbus Clippers,International League,Huntington Park,58,7074.0,10100.0,2,partial_assembled,Partial - known incomplete,0,0.034482758620689655
-451,Iowa Cubs,International League,Field of Dreams,1,7096.0,7096.0,0,full_season_release,Complete,1,0.0
-451,Iowa Cubs,International League,Principal Park,63,5263.0,11508.0,2,full_season_release,Complete,1,0.031746031746031744
-484,Indianapolis Indians,International League,Victory Field,67,7510.0,13675.0,10,full_season_release,Complete,1,0.14925373134328357
-494,Charlotte Knights,International League,Truist Field,66,5362.0,11355.0,10,partial_assembled,Partial - known incomplete,0,0.15151515151515152
-512,Toledo Mud Hens,International League,Fifth Third Field,59,6358.0,12112.0,15,partial_assembled,Partial - known incomplete,0,0.2542372881355932
-529,Tacoma Rainiers,Pacific Coast League,Cheney Stadium,67,5466.0,7260.0,2,partial_assembled,Partial - known incomplete,0,0.029850746268656716
-531,Scranton/Wilkes-Barre RailRiders,International League,PNC Field,58,4138.0,8451.0,12,full_season_release,Complete,1,0.20689655172413793
-533,Worcester Red Sox,International League,Polar Park,65,6476.0,9508.0,4,partial_assembled,Partial - known incomplete,0,0.06153846153846154
-534,Rochester Red Wings,International League,ESL Ballpark,64,5927.0,10565.0,12,full_season_release,Complete,1,0.1875
-541,Omaha Storm Chasers,International League,Werner Park,62,3537.0,7775.0,7,full_season_release,Complete,1,0.11290322580645161
-552,Syracuse Mets,International League,NBT Bank Stadium,59,4671.0,10815.0,0,partial_assembled,Partial - known incomplete,0,0.0
-556,Nashville Sounds,International League,First Horizon Park,60,6767.0,11559.0,24,full_season_release,Complete,1,0.4
-561,Salt Lake Bees,Pacific Coast League,The Ballpark at America First Square,66,5578.0,7852.0,0,no_source_found,No promo data,0,0.0
-564,Jacksonville Jumbo Shrimp,International League,Vystar Ballpark,66,5277.0,10768.0,15,full_season_release,Complete,1,0.22727272727272727
-568,Norfolk Tides,International League,Harbor Park,56,5381.0,11026.0,0,no_source_found,No promo data,0,0.0
-1410,Lehigh Valley IronPigs,International League,Coca-Cola Park,65,7740.0,10000.0,26,full_season_release,Complete,1,0.4
-1960,St. Paul Saints,International League,CHS Field,65,5965.0,9377.0,5,full_season_release,Complete,1,0.07692307692307693
-2310,Reno Aces,Pacific Coast League,Greater Nevada Field,69,4691.0,8125.0,9,partial_assembled,Partial - known incomplete,0,0.13043478260869565
-4904,El Paso Chihuahuas,Pacific Coast League,Southwest University Park,63,6150.0,9213.0,4,full_season_release,Complete,1,0.06349206349206349
-5434,Sugar Land Space Cowboys,Pacific Coast League,Constellation Field,59,3469.0,6592.0,21,full_season_release,Complete,1,0.3559322033898305
+team_id,club,league,home_dates,mean_attendance,max_attendance,giveaways,primary_venue,venues_used,promo_coverage,coverage_label,analysis_eligible,giveaway_rate
+102,Round Rock Express,Pacific Coast League,63,4971.0,11417.0,11,Dell Diamond,1,full_season_release,Complete,1,0.1746031746031746
+105,Sacramento River Cats,Pacific Coast League,60,3956.0,8332.0,11,Sutter Health Park,1,full_season_release,Complete,1,0.18333333333333332
+234,Durham Bulls,International League,67,6142.0,11682.0,1,Durham Bulls Athletic Park,1,partial_assembled,Partial - known incomplete,0,0.014925373134328358
+235,Memphis Redbirds,International League,61,3131.0,10269.0,12,AutoZone Park,1,partial_assembled,Partial - known incomplete,0,0.19672131147540983
+238,Oklahoma City Comets,Pacific Coast League,67,5588.0,11290.0,6,Chickasaw Bricktown Ballpark,1,full_season_release,Complete,1,0.08955223880597014
+342,Albuquerque Isotopes,Pacific Coast League,62,6703.0,12053.0,15,Isotopes Park,1,full_season_release,Complete,1,0.24193548387096775
+400,Las Vegas Aviators,Pacific Coast League,69,5984.0,12390.0,6,Las Vegas Ballpark,1,partial_assembled,Partial - known incomplete,0,0.08695652173913043
+416,Louisville Bats,International League,65,4314.0,9802.0,2,Louisville Slugger Field,1,partial_assembled,Partial - known incomplete,0,0.03076923076923077
+422,Buffalo Bisons,International League,58,6245.0,13590.0,8,Sahlen Field,1,full_season_release,Complete,1,0.13793103448275862
+431,Gwinnett Stripers,International League,59,2409.0,7267.0,9,Gwinnett Field,1,full_season_release,Complete,1,0.15254237288135594
+445,Columbus Clippers,International League,58,7074.0,10100.0,2,Huntington Park,1,partial_assembled,Partial - known incomplete,0,0.034482758620689655
+451,Iowa Cubs,International League,64,5292.0,11508.0,2,Principal Park,2,full_season_release,Complete,1,0.03125
+484,Indianapolis Indians,International League,67,7510.0,13675.0,10,Victory Field,1,full_season_release,Complete,1,0.14925373134328357
+494,Charlotte Knights,International League,66,5362.0,11355.0,10,Truist Field,1,partial_assembled,Partial - known incomplete,0,0.15151515151515152
+512,Toledo Mud Hens,International League,59,6358.0,12112.0,15,Fifth Third Field,1,partial_assembled,Partial - known incomplete,0,0.2542372881355932
+529,Tacoma Rainiers,Pacific Coast League,67,5466.0,7260.0,2,Cheney Stadium,1,partial_assembled,Partial - known incomplete,0,0.029850746268656716
+531,Scranton/Wilkes-Barre RailRiders,International League,58,4138.0,8451.0,12,PNC Field,1,full_season_release,Complete,1,0.20689655172413793
+533,Worcester Red Sox,International League,65,6476.0,9508.0,4,Polar Park,1,partial_assembled,Partial - known incomplete,0,0.06153846153846154
+534,Rochester Red Wings,International League,64,5927.0,10565.0,12,ESL Ballpark,1,full_season_release,Complete,1,0.1875
+541,Omaha Storm Chasers,International League,62,3537.0,7775.0,7,Werner Park,1,full_season_release,Complete,1,0.11290322580645161
+552,Syracuse Mets,International League,59,4671.0,10815.0,0,NBT Bank Stadium,1,partial_assembled,Partial - known incomplete,0,0.0
+556,Nashville Sounds,International League,60,6767.0,11559.0,24,First Horizon Park,1,full_season_release,Complete,1,0.4
+561,Salt Lake Bees,Pacific Coast League,66,5578.0,7852.0,0,The Ballpark at America First Square,1,no_source_found,No promo data,0,0.0
+564,Jacksonville Jumbo Shrimp,International League,66,5277.0,10768.0,15,Vystar Ballpark,1,full_season_release,Complete,1,0.22727272727272727
+568,Norfolk Tides,International League,56,5381.0,11026.0,0,Harbor Park,1,no_source_found,No promo data,0,0.0
+1410,Lehigh Valley IronPigs,International League,65,7740.0,10000.0,26,Coca-Cola Park,1,full_season_release,Complete,1,0.4
+1960,St. Paul Saints,International League,65,5965.0,9377.0,5,CHS Field,1,full_season_release,Complete,1,0.07692307692307693
+2310,Reno Aces,Pacific Coast League,69,4691.0,8125.0,9,Greater Nevada Field,1,partial_assembled,Partial - known incomplete,0,0.13043478260869565
+4904,El Paso Chihuahuas,Pacific Coast League,63,6150.0,9213.0,4,Southwest University Park,1,full_season_release,Complete,1,0.06349206349206349
+5434,Sugar Land Space Cowboys,Pacific Coast League,59,3469.0,6592.0,21,Constellation Field,1,full_season_release,Complete,1,0.3559322033898305
