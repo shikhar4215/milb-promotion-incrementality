@@ -91,6 +91,16 @@ def main() -> None:
     # Power BI sorts text alphabetically, which would put "Under 55F" last.
     # Ship an explicit sort key so the axis reads cold to hot.
     fct["temp_band_num"] = fct["temp_band"].map({b: i for i, b in enumerate(bands)})
+    # Three-way status for the control-group chart. A date merely lacking a
+    # giveaway is not a clean control: if it sits beside one in the same
+    # homestand it may be contaminated by it.
+    fct["control_status"] = np.where(
+        fct["has_giveaway"] == 1, "Giveaway",
+        np.where(fct["games_from_giveaway"].isna(),
+                 "Clean control", "Adjacent to a giveaway"))
+    fct["control_status_order"] = fct["control_status"].map(
+        {"Giveaway": 0, "Adjacent to a giveaway": 1, "Clean control": 2})
+
     fct["offset_label"] = fct["games_from_giveaway"].map(
         lambda o: "Giveaway" if o == 0 else
         (f"{int(o):+d} games" if pd.notna(o) and abs(o) <= 2 else
@@ -104,6 +114,17 @@ def main() -> None:
     pd.read_csv(config.DATA_PROCESSED / "dim_date.csv").to_csv(BI / "dim_date.csv", index=False)
 
     # ---- fct_model_result ------------------------------------------------
+    # Power BI sorts text alphabetically, which would order the homestand
+    # positions +1, +2, +3, +4, -1, -2, -3, -4, Giveaway. Ship an explicit
+    # sort key, and a short scope label fit for a chart legend.
+    # Offset the weekday keys so the two analyses can never interleave on a
+    # shared axis: positions occupy 0-8, weekdays 100-106.
+    DAY_ORDER = {d: 100 + i for i, d in enumerate(
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])}
+    POS_ORDER = {c: i for i, c in enumerate(
+        ["-4 games", "-3 games", "-2 games", "-1 games", "Giveaway",
+         "+1 games", "+2 games", "+3 games", "+4 games"])}
+
     rows = []
     wk = pd.read_csv(config.REPORTS / "lift_by_weekday.csv")
     for _, r in wk.iterrows():
@@ -116,10 +137,13 @@ def main() -> None:
             "reliable": int(pd.notna(reliable) and reliable >= 1),
             "note": ("Control pool smaller than treated group - not validated"
                      if pd.notna(reliable) and reliable < 1 else ""),
+            "category_order": DAY_ORDER.get(r["day_of_week"], 99),
+            "scope": "By night",
         })
 
     for tag, label in [("eligible", "17 complete-coverage clubs"),
                        ("all_clubs", "28 clubs incl. incomplete")]:
+        short = "17 clubs, complete data" if tag == "eligible" else "28 clubs, incl. incomplete"
         off = pd.read_csv(config.REPORTS / f"lift_by_offset_{tag}.csv")
         for _, r in off.iterrows():
             rows.append({
@@ -129,6 +153,9 @@ def main() -> None:
                 "ci_low": round(r["ci_low_pct"], 2), "ci_high": round(r["ci_high_pct"], 2),
                 "excludes_zero": int(r["ci_low_pct"] > 0 or r["ci_high_pct"] < 0),
                 "reliable": 1, "note": "",
+                "category_order": POS_ORDER.get(
+                    "Giveaway" if r["offset"] == 0 else f"{int(r['offset']):+d} games", 99),
+                "scope": short,
             })
 
     pd.DataFrame(rows).to_csv(BI / "fct_model_result.csv", index=False)
