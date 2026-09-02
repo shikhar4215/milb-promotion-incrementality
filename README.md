@@ -3,7 +3,7 @@
 A causal analysis of promotional giveaways across all 30 Triple-A baseball clubs,
 using game-level attendance, ballpark weather, and hand-verified promotional calendars.
 
-**Status: analysis complete, dashboard in progress.**
+**Status: complete.** Analysis, five-page Power BI report, and write-up.
 
 **Headline:** giveaways add roughly **5%** to a Triple-A crowd — a few hundred fans on a
 gate of about 6,000, far below how promotions are usually described.
@@ -65,8 +65,10 @@ Consistent in direction across every specification, and the placebo test support
 400 fake giveaway sets matched on weekday produce a mean effect of −0.9%, against an
 observed +4.6%.
 
-In fans, that is roughly **280 extra people on a 6,073 baseline**. Real, and much
-smaller than the folklore.
+In fans, that is roughly **243 extra people on a 6,073 baseline**. Real, and much
+smaller than the folklore. (243 is the average of actual minus predicted across the 198
+giveaway dates. Applying 4.6% to the mean baseline gives 281 instead — the percentage is
+a geometric mean and the fan count an arithmetic one. The measured count is reported.)
 
 ![Giveaway effect by night](reports/figures/fig2_lift_by_night.png)
 
@@ -102,6 +104,39 @@ Before any promotion is involved: night of the week dominates, temperature matte
 peaks at 75-85°F, and conditions barely register once temperature is known.
 
 ![Attendance drivers](reports/figures/fig1_attendance_drivers.png)
+
+## Dashboard
+
+Five pages in Power BI, built on a star schema of one fact table and two dimensions.
+Full-resolution PDF: [`reports/milb_dashboard.pdf`](reports/milb_dashboard.pdf).
+
+**The answer, first.**
+
+![Summary](reports/dashboard/01-summary.png)
+
+**What moves a crowd before any promotion is involved.** Night of the week dominates;
+temperature peaks at 75-85 degrees; sky conditions barely register. Monday is excluded —
+three home dates all season, all Memorial Day.
+
+![Attendance drivers](reports/dashboard/02-attendance-drivers.png)
+
+**The giveaway effect, and where it cannot be trusted.** Saturday carries the largest
+estimate and is the one night the placebo test cannot validate, because 79 of 129
+eligible Saturdays were treated.
+
+![Giveaway effect](reports/dashboard/03-giveaway-effect.png)
+
+**What survived specification and what did not.** The left chart is the reason the
+displacement question was abandoned: on every night but Saturday there are three to four
+untreated dates for each treated one, and on Saturday there are fewer.
+
+![Robustness](reports/dashboard/04-robustness.png)
+
+**Which clubs the analysis can actually use.** A 3.2x spread in average crowd across 30
+clubs is why the model carries club fixed effects, and the colour coding separates the 17
+clubs with complete promotional calendars from the rest.
+
+![Clubs](reports/dashboard/05-clubs.png)
 
 ## Design decisions
 
@@ -157,14 +192,21 @@ data/
   reference/    giveaways_2026.csv - hand-verified, every row carries its source URL
   processed/    analysis-ready tables
 src/
-  config.py               paths, league filters, study constants
-  extract_games.py        resumable two-pass extractor for game logs and attendance
-  fetch_promo_pages.py    club promotions page downloader
-  validate_giveaways.py   joins giveaways to the schedule, reports defects
-docs/           source evaluation and data quality
+  config.py                   paths, league filters, study constants
+  extract_games.py            resumable two-pass extractor for game logs and attendance
+  fetch_promo_pages.py        club promotions page downloader
+  validate_giveaways.py       joins giveaways to the schedule, reports defects
+  build_dataset.py            collapses games to home dates, builds homestands and features
+  model_baseline.py           the counterfactual: log-linear OLS with club fixed effects
+  diagnose_model.py           cross-validated fit and placebo test
+  model_within_homestand.py   homestand fixed effects, clustered standard errors
+  lift_by_weekday.py          per-night lift with per-weekday placebo
+  build_bi_tables.py          star schema for Power BI
+  make_figures.py             report figures
+docs/           source evaluation, data quality, findings, dashboard setup
 notebooks/      exploratory analysis
-powerbi/        dashboard
-reports/        validation output and figures
+powerbi/        .pbix report and theme
+reports/        model output, figures, and dashboard exports
 ```
 
 ## Reproducing
@@ -191,6 +233,6 @@ interrupted run resumes where it stopped.
 - [x] Feature engineering: homestand structure, date dimension
 - [x] Baseline attendance model (the counterfactual)
 - [x] Lift and displacement estimation, with placebo and specification checks
-- [ ] Power BI dashboard
+- [x] Power BI dashboard
 - [ ] Recover 2024 and 2025 giveaway calendars — the extension that would make
       displacement estimable
