@@ -5,21 +5,21 @@ Lift by night,Thursday,36,2.03,-4.95,9.52,0,1,,103,By night
 Lift by night,Friday,121,6.03,-0.1,12.53,0,1,,104,By night
 Lift by night,Saturday,246,14.7,10.91,18.61,1,0,Control pool smaller than treated group - not validated,105,By night
 Lift by night,Sunday,80,3.7,-2.8,10.64,0,1,,106,By night
-Position in homestand (17 complete-coverage clubs),-4 games,116,0.94,-4.64,6.84,0,1,,0,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-3 games,205,-1.48,-5.69,2.92,0,1,,1,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-2 games,247,-0.69,-4.66,3.43,0,1,,2,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-1 games,369,-0.21,-2.98,2.63,0,1,,3,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),Giveaway,577,9.53,6.94,12.18,1,1,,4,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+1 games,384,3.7,0.51,6.99,1,1,,5,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+2 games,122,-1.76,-6.9,3.67,0,1,,6,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+3 games,49,-3.14,-11.83,6.41,0,1,,7,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+4 games,27,-7.14,-18.36,5.62,0,1,,8,"17 clubs, complete data"
-Position in homestand (28 clubs incl. incomplete),-4 games,140,0.48,-4.6,5.83,0,1,,0,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-3 games,255,-0.41,-4.14,3.47,0,1,,1,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-2 games,309,1.09,-2.53,4.85,0,1,,2,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-1 games,447,0.95,-1.53,3.5,0,1,,3,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),Giveaway,692,10.75,8.36,13.2,1,1,,4,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+1 games,457,4.69,1.75,7.71,1,1,,5,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+2 games,156,-0.65,-5.11,4.02,0,1,,6,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+3 games,61,-0.31,-8.21,8.27,0,1,,7,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+4 games,33,-6.87,-16.42,3.76,0,1,,8,"28 clubs, incl. incomplete"
+Position in homestand (eligible club-seasons),-4 games,116,0.94,-4.64,6.84,0,1,,0,Complete calendars
+Position in homestand (eligible club-seasons),-3 games,205,-1.48,-5.69,2.92,0,1,,1,Complete calendars
+Position in homestand (eligible club-seasons),-2 games,247,-0.69,-4.66,3.43,0,1,,2,Complete calendars
+Position in homestand (eligible club-seasons),-1 games,369,-0.21,-2.98,2.63,0,1,,3,Complete calendars
+Position in homestand (eligible club-seasons),Giveaway,577,9.53,6.94,12.18,1,1,,4,Complete calendars
+Position in homestand (eligible club-seasons),+1 games,384,3.7,0.51,6.99,1,1,,5,Complete calendars
+Position in homestand (eligible club-seasons),+2 games,122,-1.76,-6.9,3.67,0,1,,6,Complete calendars
+Position in homestand (eligible club-seasons),+3 games,49,-3.14,-11.83,6.41,0,1,,7,Complete calendars
+Position in homestand (eligible club-seasons),+4 games,27,-7.14,-18.36,5.62,0,1,,8,Complete calendars
+Position in homestand (all club-seasons with data),-4 games,140,0.48,-4.6,5.83,0,1,,0,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),-3 games,255,-0.41,-4.14,3.47,0,1,,1,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),-2 games,309,1.09,-2.53,4.85,0,1,,2,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),-1 games,447,0.95,-1.53,3.5,0,1,,3,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),Giveaway,692,10.75,8.36,13.2,1,1,,4,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),+1 games,457,4.69,1.75,7.71,1,1,,5,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),+2 games,156,-0.65,-5.11,4.02,0,1,,6,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),+3 games,61,-0.31,-8.21,8.27,0,1,,7,"All, incl. incomplete"
+Position in homestand (all club-seasons with data),+4 games,33,-6.87,-16.42,3.76,0,1,,8,"All, incl. incomplete"

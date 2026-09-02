@@ -165,9 +165,12 @@ def main() -> None:
             "scope": "By night",
         })
 
-    for tag, label in [("eligible", "17 complete-coverage clubs"),
-                       ("all_clubs", "28 clubs incl. incomplete")]:
-        short = "17 clubs, complete data" if tag == "eligible" else "28 clubs, incl. incomplete"
+    # Labels describe club-seasons, not clubs: coverage is graded per season, so
+    # a club can be in the eligible sample one year and out of it the next.
+    for tag, label in [("eligible", "eligible club-seasons"),
+                       ("all_clubs", "all club-seasons with data")]:
+        short = ("Complete calendars" if tag == "eligible"
+                 else "All, incl. incomplete")
         off = pd.read_csv(config.REPORTS / f"lift_by_offset_{tag}.csv")
         for _, r in off.iterrows():
             rows.append({
