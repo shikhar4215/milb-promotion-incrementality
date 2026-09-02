@@ -34,9 +34,11 @@ and across specifications:
 
 **The placebo test is decisive.** 400 fake giveaway sets, matched on weekday, drawn from
 untreated dates and pushed through the identical pipeline, produce a mean effect of
-−0.15% with a standard deviation of 0.66pp and a range of [−1.62%, +1.13%]. The observed
-+9.53% is roughly fourteen standard deviations outside that distribution. Not one draw in
-400 came close.
+−0.15%, ranging from −1.62% to +1.13%. The observed +9.53% sits far outside that range:
+not one draw in 400 reached it, so the randomisation p-value is < 0.0025 — the smallest
+value 400 draws can express. (Counting standard deviations would be the wrong framing here;
+a permutation distribution carries no normality assumption, and the count of draws that
+beat the observed effect is the whole test.)
 
 **The model predicts honestly out of sample.** Cross-validated R² of 0.631 on held-out
 dates, median absolute error 790 fans against a typical crowd of 5,205. Untreated dates
