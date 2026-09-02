@@ -41,7 +41,7 @@ import config
 SPILLOVER_WINDOW = 3
 
 FORMULA = (
-    "log_attendance ~ C(team_id) + C(day_of_week) + C(month_num) + C(day_night)"
+    "log_attendance ~ C(team_id) + C(season) + C(day_of_week) + C(month_num) + C(day_night)"
     " + temp_f + temp_f_sq + is_wet + is_holiday"
     " + home_win_pct + away_win_pct"
     " + homestand_game_index + days_since_last_home_date"
@@ -53,10 +53,10 @@ def load(all_clubs: bool) -> pd.DataFrame:
 
     if not all_clubs:
         df = df[df["analysis_eligible"] == 1].copy()
-        scope = "17 clubs with complete season promo releases"
+        scope = "club-seasons with a complete season promo release"
     else:
         df = df[df["club_coverage"] != "no_source_found"].copy()
-        scope = "all clubs with any promo data (includes known-incomplete clubs)"
+        scope = "all club-seasons with any promo data (includes known-incomplete)"
 
     df["log_attendance"] = np.log(df["attendance"])
     df["temp_f"] = df["temp_f"].fillna(df["temp_f"].median())
@@ -67,7 +67,8 @@ def load(all_clubs: bool) -> pd.DataFrame:
     df["offset"] = df["games_from_giveaway"]
 
     print(f"scope: {scope}")
-    print(f"home dates: {len(df):,}   giveaways: {int(df['has_giveaway'].sum()):,}\n")
+    print(f"home dates: {len(df):,}   giveaways: {int(df['has_giveaway'].sum()):,}"
+          f"   club-seasons: {df.groupby(['team_id','season']).ngroups}\n")
     return df
 
 

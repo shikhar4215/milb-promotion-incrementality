@@ -1,140 +1,152 @@
 # Findings
 
-Status as of the 2026 season, single treatment year.
+Three seasons of Triple-A baseball, 2024–2026. 6,195 club home dates, of which 2,992 fall
+in the 44 club-seasons with a complete published giveaway calendar. 577 of those carry a
+giveaway.
+
+This document supersedes the single-season version. Where a conclusion changed, the old
+one and the reason it was wrong are kept rather than quietly replaced.
 
 ## What the data supports
 
-**Giveaway dates draw more than the same club's ordinary date — modestly.**
+**Giveaways add about 9.5% to a crowd.** On the eligible sample the giveaway date runs
++9.53% above its own model-predicted attendance, 95% CI [+6.9, +12.2], across 577 treated
+dates. In fans: roughly +566 on a 5,942 baseline.
 
-| Specification | Effect on giveaway date | 95% CI | p |
-|---|---|---|---|
-| League baseline, 17 complete-coverage clubs | +4.63% | [+0.49, +8.94] | — |
-| League baseline, 28 clubs (incl. incomplete) | +6.08% | [+2.26, +10.04] | — |
-| Within-homestand fixed effects | +8.31% | [−0.65, +18.08] | 0.070 |
+The estimate is stable across seasons, which is the first thing to check when pooling
+years:
 
-Every specification points the same direction, and the placebo test is decisive:
-400 fake giveaway sets, matched on club and weekday, produce a mean effect of
-−1.20% (95% range −3.8% to +1.2%) against an observed +4.63%. Only 0.3% of
-placebo draws were that extreme. **The pipeline is not manufacturing the effect.**
-
-The honest statement is that giveaways add somewhere in the region of 5–8% to a
-crowd — a few hundred fans on a typical Triple-A gate of ~6,000. That is far
-below how promotions are usually described. Nobody's attendance doubles.
-
-## What the data does not support
-
-**We cannot establish whether giveaways displace demand.** This was the project's
-motivating question, and one season cannot answer it.
-
-The estimates are not robust across specification:
-
-| Position | League baseline | Within-homestand |
+| Season | Treated dates | Effect |
 |---|---|---|
-| Day before (−1) | −6.63% [−11.16, −1.86] | +0.15% (p=0.973) |
-| Giveaway (0) | +4.63% [+0.49, +8.94] | +8.31% (p=0.070) |
-| Day after (+1) | +5.68% [−0.62, +12.38] | +9.01% (p=0.066) |
+| 2024 | 191 | +10.49% |
+| 2025 | 188 | +10.29% |
+| 2026 | 198 | +7.89% |
 
-The league-baseline model shows a significant dip the day before. That dip
-disappears completely under homestand fixed effects. When a result flips that
-hard on a defensible change of specification, the result is the specification,
-not the world.
+and across specifications:
 
-### Why, precisely
+| Specification | Effect | 95% CI | n |
+|---|---|---|---|
+| League baseline, eligible club-seasons | +9.5% | [+6.9, +12.2] | 577 |
+| League baseline, all club-seasons with data | +10.8% | [+8.4, +13.2] | 692 |
+| Within-homestand fixed effects | +9.0% | [+3.2, +15.0] | 530 |
+| Within-homestand, midweek giveaways only | +14.7% | [+3.5, +27.3] | 245 |
+| Within-homestand, Saturday giveaways dropped | +14.3% | [+6.0, +23.3] | 145 |
 
-Position within a homestand and day of week are close to the same variable.
+**The placebo test is decisive.** 400 fake giveaway sets, matched on weekday, drawn from
+untreated dates and pushed through the identical pipeline, produce a mean effect of
+−0.15% with a standard deviation of 0.66pp and a range of [−1.62%, +1.13%]. The observed
++9.53% is roughly fourteen standard deviations outside that distribution. Not one draw in
+400 came close.
 
-```
-offset -2: 41% Wednesday
-offset -1: 41% Friday
-offset  0: 40% Saturday      <- the giveaway
-offset +1: 49% Sunday
-offset +2: 52% Sunday
-```
+**The model predicts honestly out of sample.** Cross-validated R² of 0.631 on held-out
+dates, median absolute error 790 fans against a typical crowd of 5,205. Untreated dates
+sit at +0.39%, which is the check that matters — a baseline that drifted positive on
+controls would make the treated estimate meaningless.
 
-Clubs put giveaways on Saturdays. Homestands run Tuesday through Sunday. So
-"the day before a giveaway" is largely a synonym for "Friday", and "the day
-after" for "Sunday". Control for day of week and homestand together and almost
-no independent variation remains to identify displacement from.
+## What the data now supports that one season could not
 
-The league-baseline model appeared to find displacement because it compared
-Friday-heavy dates against a baseline that models day of week additively and
-imperfectly. The −6.63% is most likely a Friday artifact, not fans waiting for
-a bobblehead.
+**There is no displacement.** The date before a giveaway sits at or above its own baseline
+in every specification:
 
-## What would actually answer the question
+| Specification | Day before | 95% CI |
+|---|---|---|
+| League baseline | −0.2% | [−3.0, +2.6] |
+| Within-homestand | +1.2% | [−3.9, +6.6] |
+| Midweek giveaways only | +3.9% | [−6.1, +14.9] |
+| Saturday giveaways dropped | −3.0% | [−10.0, +4.6] |
 
-**More treatment seasons.** Not more games — more *seasons of observed
-promotions*. With three or four years, the same weekday appears at many
-different homestand positions, which breaks the collinearity and gives the
-displacement estimate something to work with.
+None is distinguishable from zero and the signs disagree, which is what noise looks like.
 
-Attendance history back to 2012 is already reachable through the same API. The
-binding constraint is the promotional calendar, which currently exists only for
-2026. Club press releases announcing prior seasons' schedules do persist —
-2023 announcements are still live — so recovering 2024 and 2025 is the single
-highest-value extension to this project, and it is what would turn the
-displacement question from unanswerable into answerable.
+State this as a bound, not a proof. The midweek interval rules out pull-forward worse than
+about −6% on the day before; it does not rule out −2%. What it does rule out is the large
+displacement the project's premise assumed, and that is a real answer.
 
-## Weekday breakdown: attempted, and not supported
+## The result that did not survive, and why
 
-Since homestand position and weekday are near-collinear, the natural follow-up
-was whether the giveaway effect differs by night. It does not resolve cleanly,
-and the attempt is documented because the failure is informative.
+The single-season version reported **−6.63% [−11.2, −1.9]** on the day before a giveaway —
+apparent, significant displacement. Under homestand fixed effects the same coefficient
+became **+0.15%, p = 0.973**.
 
-| Night | n | Lift | 95% CI | Placebo pool |
-|---|---|---|---|---|
-| Tuesday | 11 | +15.8% | [−4.5, +40.3] | 43 |
-| Wednesday | 24 | −3.7% | [−12.2, +5.6] | 45 |
-| Thursday | 14 | −14.5% | [−21.2, −7.2] | 44 |
-| Friday | 46 | +4.8% | [−5.0, +15.7] | 48 |
-| Saturday | 79 | +9.9% | [+3.8, +16.4] | **50 — smaller than treated group** |
-| Sunday | 23 | +1.0% | [−11.0, +14.7] | 48 |
+The diagnosis: giveaways cluster on Saturdays and homestands run Tuesday to Sunday, so
+"the day before a giveaway" was largely a synonym for "Friday." Offset −1 was 41% Friday;
+offset 0 was 40% Saturday. Position in a homestand and day of week were close to the same
+variable, and one season contained no leverage to separate them.
 
-Only Saturday and Thursday have intervals excluding zero. Thursday rests on 14
-giveaways and is most plausibly selection — clubs scheduling promotions onto
-Thursdays they already expected to be soft, which the model cannot observe.
+Three seasons resolve it, and the mechanism matters more than the row count. **More
+observations would not have helped by themselves** — Saturday giveaways scale with the
+panel. What helped is midweek giveaways, where the day before is a Monday, Tuesday or
+Wednesday. Those went from 49 to 128, enough to fit the model on that subsample alone.
+The midweek row is the one carrying the argument.
 
-**Saturday is the one that matters and the one we cannot validate.** 79 of 129
-eligible Saturdays carried a giveaway. Nashville and Sugar Land ran one on
-*every* home Saturday. There are 50 giveaway-free Saturdays league-wide, fewer
-than the treated group, so no placebo can be constructed and the counterfactual
-rests on a thin and possibly unrepresentative set of dates.
+The −6.63% was a Friday artifact. It does not survive, and it should not have been
+reported as decisive in the first place.
 
-### A caution on the placebo p-values
+## What three seasons did not fix
 
-Placebo p-values throughout this project run smaller than the analytic
-confidence intervals justify — Friday reports p=0.000 alongside a CI spanning
-[−5.0%, +15.7%]. The cause is pool size: draws of 46 from a pool of 48 overlap
-almost entirely, so the placebo distribution understates true sampling
-variability. **The confidence intervals are the honest inference. Placebo tests
-are used here as a directional check that the pipeline is not manufacturing
-effects, not as significance tests.**
+**Saturday remains unvalidatable.** 246 eligible Saturdays carry a giveaway against 138
+clean controls — dates with no giveaway anywhere in the homestand, the only ones a placebo
+can safely draw from. That is 0.56 controls per treated date:
 
-An earlier version of the placebo matched draws on club as well as weekday,
-which shrank the Saturday pool below the treated group and silently truncated
-the draws. That was corrected to weekday-only matching, which is sufficient
-because residuals are already club-adjusted by the model's fixed effects.
+| Night | Treated | Clean controls | Ratio |
+|---|---|---|---|
+| Tuesday | 33 | 129 | 3.91x |
+| Wednesday | 59 | 134 | 2.27x |
+| Thursday | 36 | 131 | 3.64x |
+| Friday | 121 | 138 | 1.14x |
+| **Saturday** | **246** | **138** | **0.56x** |
+| Sunday | 80 | 135 | 1.69x |
 
-## Where this actually lands
+Adding seasons scales treated and control together, because clubs schedule Saturday
+giveaways every year. This is a structural feature of how baseball promotions are
+scheduled, not a sample-size problem, and no amount of history repairs it. It would take a
+club that stopped running Saturday giveaways, or an experiment.
 
-One season supports a **pooled giveaway lift of roughly 5%**, with a confidence
-interval that barely excludes zero, and little else. It does not support the
-displacement analysis the project was built around, and it does not support a
-reliable weekday breakdown.
+Saturday carries 43% of all treated dates, so this is not a footnote. The reassurance
+available is that dropping Saturday entirely leaves +14.3% [+6.0, +23.3] — the headline
+does not depend on the night that cannot be checked.
 
-The binding constraint is not model choice. It is that promotional scheduling
-is highly structured — Saturdays, weekends, good opponents — so within a single
-season the control group for the most common promotional slot barely exists.
-Recovering 2024 and 2025 giveaway calendars is what would make both questions
-answerable.
+## Weekday breakdown
+
+Per-night estimates, with the caveat that several pools are thin:
+
+| Night | n | Effect | 95% CI | Placebo mean | Verdict |
+|---|---|---|---|---|---|
+| Tuesday | 33 | +21.9% | [+9.3, +36.0] | +0.3% | significant, small n |
+| Wednesday | 59 | +0.3% | [−6.1, +7.2] | +2.4% | null |
+| Thursday | 36 | +2.0% | [−4.9, +9.5] | −1.4% | null |
+| Friday | 121 | +6.0% | [−0.1, +12.5] | −1.6% | pool thin |
+| Saturday | 246 | +14.7% | [+10.9, +18.6] | — | **placebo invalid** |
+| Sunday | 80 | +3.7% | [−2.8, +10.6] | +1.2% | pool thin |
+
+Tuesday and Wednesday disagree sharply on samples of 33 and 59. Do not read a weeknight
+pattern into this; the honest summary is that the effect is concentrated on weekends and
+the midweek nights are individually underpowered.
+
+## Where this lands
+
+Giveaways create attendance. About 9.5%, roughly 570 fans, and the surrounding dates do
+not pay for it. That is a real effect and it is far below how promotions are usually
+described — a bobblehead night is not doubling the gate.
+
+The project's motivating question was whether promotions move demand rather than create
+it. On three seasons of Triple-A data, they create it. The interesting caveat is not about
+the answer but about the design: the single most-promoted night of the week is the one
+night that cannot be checked, and the reason is that clubs promote it almost every week.
 
 ## Secondary caveats
 
-- Giveaway coverage is complete for only 17 of 30 clubs. Adding the
-  partial-coverage clubs moved the lift estimate from +4.63% to +6.08%, well
-  within noise, but those clubs have real giveaways coded as controls.
-- Out-of-sample R² of the baseline is 0.617; median error 821 fans against a
-  typical crowd of 5,139. Fine for detecting a systematic shift across 198
-  giveaways, useless for predicting any single date.
-- Announced attendance is tickets distributed, not turnstile count.
-- 35 giveaways fall on September dates not yet played as of 2026-08-31.
+- **21 of 452 historical giveaway dates (4.6%) had no played home game** and were dropped
+  rather than shifted. Six were cancelled or postponed. Several carry a rain-out signature
+  — Jacksonville 2025-07-09 has home dates on 07-08 and two on 07-10, a washout made up as
+  a doubleheader. Whether the giveaway travelled to the makeup date is unknowable.
+- **Two club-seasons were demoted despite publishing a calendar.** Buffalo 2025 states
+  giveaways at roughly 35 dates and itemises 13; Nashville 2024 claims 31 and names 21.
+- **Indianapolis Knot Hole Kids Club items were excluded** — restricted to a few hundred
+  club members, and absent from the 2026 file, so including them would have made the
+  treatment definition vary by season.
+- **Iowa 2024 could not be recovered.** The release is indexed but the URL 404s.
+- **2026 is a partial season.** Its September giveaways have no game attached.
+- **Announced attendance is tickets distributed, not turnstile count.**
+- **No pricing or cost data**, so this measures attendance rather than profit. A 570-fan
+  lift against the cost of 2,000 bobbleheads is a different question and this project does
+  not answer it.

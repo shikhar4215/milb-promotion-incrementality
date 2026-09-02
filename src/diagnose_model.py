@@ -64,7 +64,7 @@ def cross_validated_r2(controls: pd.DataFrame, k: int = 5, seed: int = SEED) -> 
 
 
 def placebo(df: pd.DataFrame, model, n_draws: int = N_PLACEBO, seed: int = SEED) -> None:
-    """Fake giveaways on untreated dates, matched on club and day of week."""
+    """Fake giveaways on untreated dates, matched on day of week only."""
     rng = np.random.default_rng(seed)
 
     real = df[df["offset"] == 0]
@@ -147,7 +147,7 @@ def main() -> None:
     df = df.copy()
     df["residual"] = df["log_attendance"] - model.predict(df)
 
-    print(f"\n=== 2. placebo test ({N_PLACEBO} draws, matched on club and weekday) ===")
+    print(f"\n=== 2. placebo test ({N_PLACEBO} draws, matched on weekday) ===")
     placebo(df, model)
 
     sys.stdout = sys.__stdout__

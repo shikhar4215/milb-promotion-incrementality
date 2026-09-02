@@ -40,8 +40,15 @@ def main() -> None:
     # played away from its usual park - Iowa hosted a game at the Field of
     # Dreams site - and a duplicated key breaks the relationship to the fact
     # table. Venue is reduced to the club's primary park instead.
+    # Clubs rebrand mid-panel - Oklahoma City went from "Baseball Club" to
+    # "Comets" between 2024 and 2025 - so grouping by name as well as id would
+    # emit two rows for one club and break the relationship to the fact table.
+    # The club is keyed on team_id and labelled with its most recent name.
+    latest = (src.sort_values("season")
+                 .groupby("team_id")[["home_team", "league_name"]].last())
+
     dim_club = (
-        src.groupby(["team_id", "home_team", "league_name"])
+        src.groupby(["team_id"])
         .agg(home_dates=("date", "size"),
              mean_attendance=("attendance", "mean"),
              max_attendance=("attendance", "max"),
@@ -49,24 +56,41 @@ def main() -> None:
              primary_venue=("venue_name", lambda v: v.mode().iat[0]),
              venues_used=("venue_name", "nunique"))
         .reset_index()
+        .join(latest, on="team_id")
         .rename(columns={"home_team": "club", "league_name": "league"})
     )
     assert dim_club["team_id"].is_unique, "dim_club[team_id] must be unique"
-    cov = src.groupby("team_id")["club_coverage"].first()
-    dim_club["promo_coverage"] = dim_club["team_id"].map(cov)
-    dim_club["coverage_label"] = dim_club["promo_coverage"].map({
-        "full_season_release": "Complete",
-        "partial_assembled": "Partial - known incomplete",
-        "no_source_found": "No promo data",
-    })
-    dim_club["analysis_eligible"] = (dim_club["promo_coverage"] == "full_season_release").astype(int)
+
+    # Coverage is graded per club-season, so a club can be eligible in one year
+    # and not the next. The dimension is at club grain, so it carries the count
+    # of eligible seasons rather than a single label that would silently pick
+    # whichever season sorted first.
+    seasons_total = src["season"].nunique()
+    cs = src.drop_duplicates(["team_id", "season"])[["team_id", "season", "club_coverage"]]
+    eligible_seasons = (
+        cs.assign(ok=(cs["club_coverage"] == "full_season_release").astype(int))
+          .groupby("team_id")["ok"].sum()
+    )
+    dim_club["eligible_seasons"] = dim_club["team_id"].map(eligible_seasons).fillna(0).astype(int)
+    dim_club["seasons_observed"] = dim_club["team_id"].map(
+        cs.groupby("team_id").size()).fillna(0).astype(int)
+    dim_club["coverage_label"] = np.select(
+        [dim_club["eligible_seasons"] == seasons_total,
+         dim_club["eligible_seasons"] > 0],
+        ["Complete, every season", "Complete in some seasons"],
+        default="Never complete",
+    )
+    # A club counts as eligible for club-level display if any season qualifies;
+    # the fact table still carries per-date eligibility, which is what the
+    # models actually filter on.
+    dim_club["analysis_eligible"] = (dim_club["eligible_seasons"] > 0).astype(int)
     dim_club["giveaway_rate"] = dim_club["giveaways"] / dim_club["home_dates"]
     dim_club["mean_attendance"] = dim_club["mean_attendance"].round(0)
     dim_club.to_csv(BI / "dim_club.csv", index=False)
 
     # ---- fct_home_date ---------------------------------------------------
     keep = [
-        "date_key", "team_id", "away_team_id", "attendance", "games_that_date",
+        "date_key", "season", "team_id", "away_team_id", "attendance", "games_that_date",
         "day_night", "day_of_week", "day_of_week_num", "month_name", "month_num",
         "week_of_season", "is_weekend", "is_holiday", "holiday",
         "homestand_id", "homestand_game_index", "homestand_length",

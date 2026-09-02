@@ -1,17 +1,17 @@
 
 === Within-homestand estimates ===
-  homestands 116   dates 755   giveaways 183   within-R2 0.754
+  homestands 317   dates 2,096   giveaways 530   within-R2 0.760
 
   offset      n     effect          95% CI            p
-    -2       88    +2.52%   [ -6.04, +11.85]   0.576
-    -1      124    +0.15%   [ -8.39,  +9.49]   0.973
-    +0      183    +8.31%   [ -0.65, +18.08]   0.070  <-- giveaway
-    +1      131    +9.01%   [ -0.58, +19.52]   0.066
-    +2       48    +3.11%   [ -7.60, +15.05]   0.584
+    -2      245    +4.76%   [ -1.01, +10.86]   0.108
+    -1      359    +1.22%   [ -3.88,  +6.59]   0.646
+    +0      530    +8.97%   [ +3.23, +15.03]   0.002 *  <-- giveaway
+    +1      360    +5.35%   [ -0.34, +11.38]   0.066
+    +2      119    +1.47%   [ -5.48,  +8.94]   0.686
 
   reference category: dates 3+ games from the giveaway, same homestand
 
   reading:
-    giveaway date runs +8.3% against its own homestand
-    the date before runs +0.2%
+    giveaway date runs +9.0% against its own homestand
+    the date before runs +1.2%
     -> no significant hold-back the day before

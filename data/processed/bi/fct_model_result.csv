@@ -1,25 +1,25 @@
 analysis,category,n,effect_pct,ci_low,ci_high,excludes_zero,reliable,note,category_order,scope
-Lift by night,Tuesday,11,15.75,-4.5,40.29,0,1,,101,By night
-Lift by night,Wednesday,24,-3.71,-12.22,5.63,0,1,,102,By night
-Lift by night,Thursday,14,-14.5,-21.21,-7.22,1,1,,103,By night
-Lift by night,Friday,46,4.84,-4.98,15.67,0,1,,104,By night
-Lift by night,Saturday,79,9.91,3.79,16.38,1,0,Control pool smaller than treated group - not validated,105,By night
-Lift by night,Sunday,23,1.01,-11.05,14.71,0,1,,106,By night
-Position in homestand (17 complete-coverage clubs),-4 games,37,-2.15,-9.76,6.11,0,1,,0,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-3 games,72,2.67,-5.14,11.12,0,1,,1,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-2 games,88,-6.56,-12.98,0.34,0,1,,2,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),-1 games,129,-6.63,-11.16,-1.86,1,1,,3,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),Giveaway,198,4.63,0.49,8.94,1,1,,4,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+1 games,140,5.68,-0.62,12.38,0,1,,5,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+2 games,48,-1.34,-9.78,7.89,0,1,,6,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+3 games,19,1.75,-11.73,17.3,0,1,,7,"17 clubs, complete data"
-Position in homestand (17 complete-coverage clubs),+4 games,14,-14.16,-25.37,-1.26,1,1,,8,"17 clubs, complete data"
-Position in homestand (28 clubs incl. incomplete),-4 games,54,-1.33,-7.99,5.81,0,1,,0,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-3 games,102,2.06,-4.6,9.18,0,1,,1,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-2 games,126,-2.18,-8.15,4.18,0,1,,2,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),-1 games,170,-3.66,-7.68,0.54,0,1,,3,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),Giveaway,261,6.08,2.26,10.04,1,1,,4,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+1 games,171,4.4,-1.24,10.37,0,1,,5,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+2 games,61,-1.4,-8.69,6.47,0,1,,6,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+3 games,23,0.3,-10.65,12.61,0,1,,7,"28 clubs, incl. incomplete"
-Position in homestand (28 clubs incl. incomplete),+4 games,17,-11.54,-21.13,-0.8,1,1,,8,"28 clubs, incl. incomplete"
+Lift by night,Tuesday,33,21.92,9.29,36.01,1,1,,101,By night
+Lift by night,Wednesday,59,0.33,-6.14,7.24,0,1,,102,By night
+Lift by night,Thursday,36,2.03,-4.95,9.52,0,1,,103,By night
+Lift by night,Friday,121,6.03,-0.1,12.53,0,1,,104,By night
+Lift by night,Saturday,246,14.7,10.91,18.61,1,0,Control pool smaller than treated group - not validated,105,By night
+Lift by night,Sunday,80,3.7,-2.8,10.64,0,1,,106,By night
+Position in homestand (17 complete-coverage clubs),-4 games,116,0.94,-4.64,6.84,0,1,,0,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),-3 games,205,-1.48,-5.69,2.92,0,1,,1,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),-2 games,247,-0.69,-4.66,3.43,0,1,,2,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),-1 games,369,-0.21,-2.98,2.63,0,1,,3,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),Giveaway,577,9.53,6.94,12.18,1,1,,4,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),+1 games,384,3.7,0.51,6.99,1,1,,5,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),+2 games,122,-1.76,-6.9,3.67,0,1,,6,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),+3 games,49,-3.14,-11.83,6.41,0,1,,7,"17 clubs, complete data"
+Position in homestand (17 complete-coverage clubs),+4 games,27,-7.14,-18.36,5.62,0,1,,8,"17 clubs, complete data"
+Position in homestand (28 clubs incl. incomplete),-4 games,140,0.48,-4.6,5.83,0,1,,0,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),-3 games,255,-0.41,-4.14,3.47,0,1,,1,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),-2 games,309,1.09,-2.53,4.85,0,1,,2,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),-1 games,447,0.95,-1.53,3.5,0,1,,3,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),Giveaway,692,10.75,8.36,13.2,1,1,,4,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),+1 games,457,4.69,1.75,7.71,1,1,,5,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),+2 games,156,-0.65,-5.11,4.02,0,1,,6,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),+3 games,61,-0.31,-8.21,8.27,0,1,,7,"28 clubs, incl. incomplete"
+Position in homestand (28 clubs incl. incomplete),+4 games,33,-6.87,-16.42,3.76,0,1,,8,"28 clubs, incl. incomplete"

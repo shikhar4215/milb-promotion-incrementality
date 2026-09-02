@@ -2,8 +2,12 @@
 Build the analysis-ready dataset.
 
 Collapses games to home dates, reconstructs homestand structure, joins the
-verified giveaway calendar, and engineers every temporal feature in pandas so
+verified giveaway calendars, and engineers every temporal feature in pandas so
 Power BI reads finished columns rather than computing dates itself.
+
+Covers 2024-2026. Coverage of the giveaway calendars is graded per club-season,
+not per club: a club that published a full calendar in one year and homestand
+previews in another is eligible in the first and not the second.
 
 Outputs
 -------
@@ -17,21 +21,95 @@ Usage
 
 from __future__ import annotations
 
+import calendar
+import datetime as dt
+
 import numpy as np
 import pandas as pd
 
 import config
 
 PLAYED = ("Final", "Completed Early")
+SEASONS = (2024, 2025, 2026)
 
-# 2026 US dates that plausibly move ballpark demand.
-HOLIDAYS_2026 = {
-    "2026-05-10": "Mother's Day",
-    "2026-05-25": "Memorial Day",
-    "2026-06-21": "Father's Day",
-    "2026-07-04": "Independence Day",
-    "2026-09-07": "Labor Day",
+# Club-seasons whose release states a giveaway count materially above the number
+# of dates it actually itemises. The extra dates exist but are unobserved, and an
+# unobserved giveaway coded as a control biases lift downward, so these are
+# demoted out of the headline sample rather than trusted.
+COVERAGE_OVERRIDES: dict[tuple[int, int], tuple[str, str]] = {
+    (422, 2025): ("partial_assembled", "release claims giveaways at ~35 dates, itemises 13"),
+    (556, 2024): ("partial_assembled", "release claims 31 giveaway dates, itemises 21"),
 }
+
+
+# ---------------------------------------------------------------------------
+# Holidays
+# ---------------------------------------------------------------------------
+def _nth_weekday(year: int, month: int, weekday: int, n: int) -> dt.date:
+    """The nth given weekday of a month. Monday = 0, Sunday = 6."""
+    first = dt.date(year, month, 1)
+    offset = (weekday - first.weekday()) % 7
+    return first + dt.timedelta(days=offset + 7 * (n - 1))
+
+
+def _last_weekday(year: int, month: int, weekday: int) -> dt.date:
+    last = dt.date(year, month, calendar.monthrange(year, month)[1])
+    return last - dt.timedelta(days=(last.weekday() - weekday) % 7)
+
+
+def us_holidays(years) -> dict[str, str]:
+    """US dates that plausibly move ballpark demand, computed rather than typed."""
+    out: dict[str, str] = {}
+    for y in years:
+        out[_nth_weekday(y, 5, 6, 2).isoformat()] = "Mother's Day"
+        out[_last_weekday(y, 5, 0).isoformat()] = "Memorial Day"
+        out[_nth_weekday(y, 6, 6, 3).isoformat()] = "Father's Day"
+        out[f"{y}-07-04"] = "Independence Day"
+        out[_nth_weekday(y, 9, 0, 1).isoformat()] = "Labor Day"
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Giveaway calendars
+# ---------------------------------------------------------------------------
+def _normalise_coverage(value: object) -> str:
+    """
+    Collapse the two source vocabularies onto one.
+
+    The 2026 file was graded as full_season_release / partial_assembled /
+    no_source_found. The historical files record how the calendar was recovered
+    (complete, partial-first-half, partial-second-half, partial-homestand).
+    Anything short of a whole-season release is partial.
+    """
+    v = str(value).strip().lower()
+    if v in ("full_season_release", "complete"):
+        return "full_season_release"
+    if v.startswith("partial"):
+        return "partial_assembled"
+    return "no_source_found"
+
+
+def load_giveaways(seasons=SEASONS) -> pd.DataFrame:
+    frames = []
+    for year in seasons:
+        path = config.PROJECT_ROOT / f"data/reference/giveaways_{year}.csv"
+        if not path.exists():
+            print(f"  warning: {path.name} not found, season skipped")
+            continue
+        g = pd.read_csv(path)
+        g["season"] = year
+        frames.append(g)
+    give = pd.concat(frames, ignore_index=True)
+    give["coverage"] = give["coverage"].map(_normalise_coverage)
+    return give
+
+
+def coverage_by_club_season(give: pd.DataFrame) -> pd.Series:
+    cov = give.groupby(["team_id", "season"])["coverage"].first()
+    for key, (label, _reason) in COVERAGE_OVERRIDES.items():
+        if key in cov.index:
+            cov.loc[key] = label
+    return cov
 
 
 # ---------------------------------------------------------------------------
@@ -45,12 +123,19 @@ def build_homestands(schedule: pd.DataFrame) -> pd.DataFrame:
     inside a stand do not break it - the club is still in town, and the fans
     deciding between Friday and Saturday are the same fans. A road trip does
     break it, which is what makes the displacement test meaningful.
+
+    Homestands are scoped to a season. Without that, the last stand of one
+    season and the first of the next would merge across the winter, since no
+    road game falls between them.
     """
     frames = []
-    for team_id, club_games in schedule.groupby("home_team_id"):
-        # Every date this club appeared, home or away.
+    for (team_id, season), club_games in schedule.groupby(["home_team_id", "season"]):
+        season_sched = schedule[schedule["season"] == season]
+
         home = club_games[["date"]].assign(is_home=True)
-        away = schedule.loc[schedule["away_team_id"] == team_id, ["date"]].assign(is_home=False)
+        away = season_sched.loc[
+            season_sched["away_team_id"] == team_id, ["date"]
+        ].assign(is_home=False)
 
         timeline = (
             pd.concat([home, away])
@@ -65,12 +150,14 @@ def build_homestands(schedule: pd.DataFrame) -> pd.DataFrame:
 
         stand = timeline[timeline["is_home"]].copy()
         stand["team_id"] = team_id
+        stand["season"] = season
         stand["homestand_id"] = (
-            stand["team_id"].astype(str) + "-" + stand["homestand_seq"].astype(str)
+            f"{season}-" + stand["team_id"].astype(str)
+            + "-" + stand["homestand_seq"].astype(str)
         )
         stand["homestand_game_index"] = stand.groupby("homestand_id").cumcount() + 1
         stand["homestand_length"] = stand.groupby("homestand_id")["homestand_id"].transform("size")
-        frames.append(stand[["team_id", "date", "homestand_id",
+        frames.append(stand[["team_id", "season", "date", "homestand_id",
                              "homestand_game_index", "homestand_length"]])
 
     return pd.concat(frames, ignore_index=True)
@@ -106,7 +193,14 @@ def main() -> None:
 
     games = pd.read_csv(config.DATA_INTERIM / "games_raw.csv")
     schedule = pd.read_csv(config.DATA_INTERIM / "schedule.csv")
-    giveaways = pd.read_csv(config.PROJECT_ROOT / "data/reference/giveaways_2026.csv")
+    giveaways = load_giveaways()
+
+    missing = set(SEASONS) - set(games["season"].unique())
+    if missing:
+        raise SystemExit(
+            f"games_raw.csv is missing season(s) {sorted(missing)}. "
+            f"Re-run: python3 src/extract_games.py --seasons {' '.join(map(str, SEASONS))}"
+        )
 
     played = games[games["status"].isin(PLAYED)].copy()
 
@@ -116,6 +210,7 @@ def main() -> None:
     agg = (
         played.groupby(["home_team_id", "date"])
         .agg(
+            season=("season", "first"),
             attendance=("attendance", "sum"),
             games_that_date=("game_pk", "size"),
             home_team=("home_team", "first"),
@@ -144,18 +239,23 @@ def main() -> None:
     agg["day_of_week_num"] = d.dt.dayofweek           # Monday = 0
     agg["month_num"] = d.dt.month
     agg["month_name"] = d.dt.month_name()
-    agg["week_of_season"] = ((d - d.min()).dt.days // 7) + 1
     agg["is_weekend"] = agg["day_of_week_num"].isin([4, 5, 6]).astype(int)  # Fri-Sun
-    agg["holiday"] = agg["date"].map(HOLIDAYS_2026)
+
+    # Week 1 is the opening week of each season, not of the panel.
+    agg["week_of_season"] = agg.groupby("season")["date"].transform(
+        lambda s: ((pd.to_datetime(s) - pd.to_datetime(s).min()).dt.days // 7) + 1
+    )
+
+    holidays = us_holidays(SEASONS)
+    agg["holiday"] = agg["date"].map(holidays)
     agg["is_holiday"] = agg["holiday"].notna().astype(int)
 
     # --- homestand structure ----------------------------------------------
-    agg = agg.merge(build_homestands(schedule), on=["team_id", "date"], how="left")
+    agg = agg.merge(build_homestands(schedule), on=["team_id", "season", "date"], how="left")
     agg = agg.sort_values(["team_id", "date"])
-    agg["days_since_last_home_date"] = (
-        agg.groupby("team_id")["date"].apply(
-            lambda s: pd.to_datetime(s).diff().dt.days
-        ).reset_index(level=0, drop=True)
+    # Reset the gap at each season boundary; the winter is not a road trip.
+    agg["days_since_last_home_date"] = agg.groupby(["team_id", "season"])["date"].transform(
+        lambda s: pd.to_datetime(s).diff().dt.days
     )
 
     # --- team strength -----------------------------------------------------
@@ -167,9 +267,6 @@ def main() -> None:
     # --- treatment ---------------------------------------------------------
     give = giveaways[giveaways["date"].notna()].copy()
 
-    club_coverage = give.groupby("team_id")["coverage"].first()
-    all_coverage = giveaways.groupby("team_id")["coverage"].first()
-
     per_date = (
         give.groupby(["team_id", "date"])
         .agg(giveaway_item=("item", lambda s: " | ".join(s)),
@@ -180,7 +277,12 @@ def main() -> None:
     agg = agg.merge(per_date, on=["team_id", "date"], how="left")
     agg["has_giveaway"] = agg["giveaway_item"].notna().astype(int)
     agg["giveaway_count"] = agg["giveaway_count"].fillna(0).astype(int)
-    agg["club_coverage"] = agg["team_id"].map(all_coverage).fillna("no_source_found")
+
+    cov = coverage_by_club_season(giveaways)
+    agg["club_coverage"] = pd.MultiIndex.from_arrays(
+        [agg["team_id"], agg["season"]]
+    ).map(cov)
+    agg["club_coverage"] = agg["club_coverage"].fillna("no_source_found")
     agg["analysis_eligible"] = (agg["club_coverage"] == "full_season_release").astype(int)
 
     # Position relative to the nearest giveaway inside the same homestand -
@@ -204,7 +306,7 @@ def main() -> None:
 
     # --- write -------------------------------------------------------------
     cols = [
-        "date_key", "date", "team_id", "home_team", "league_name", "venue_name",
+        "date_key", "date", "season", "team_id", "home_team", "league_name", "venue_name",
         "away_team", "away_team_id", "attendance", "games_that_date", "day_night",
         "day_of_week", "day_of_week_num", "month_num", "month_name",
         "week_of_season", "is_weekend", "holiday", "is_holiday",
@@ -231,24 +333,35 @@ def main() -> None:
     dim["day_of_week"] = span.day_name()
     dim["day_of_week_num"] = span.dayofweek
     dim["is_weekend"] = dim["day_of_week_num"].isin([4, 5, 6]).astype(int)
-    dim["holiday"] = dim["date"].map(HOLIDAYS_2026)
+    dim["holiday"] = dim["date"].map(holidays)
     dim = dim[["date_key", "date", "year", "month_num", "month_name", "day_of_month",
                "day_of_week", "day_of_week_num", "is_weekend", "holiday"]]
     dim.to_csv(config.DATA_PROCESSED / "dim_date.csv", index=False)
 
     # --- summary -----------------------------------------------------------
-    elig = out[out["analysis_eligible"] == 1]
     print(f"home dates:            {len(out):,}")
     print(f"  with a giveaway:     {int(out['has_giveaway'].sum()):,}")
     print(f"  clubs:               {out['team_id'].nunique()}")
     print(f"  homestands:          {out['homestand_id'].nunique():,}")
     print(f"  median homestand:    {out.groupby('homestand_id').size().median():.0f} dates")
     print()
-    print(f"analysis-eligible (full_season_release clubs only):")
+    print("by season:")
+    for season, block in out.groupby("season"):
+        elig = block[block["analysis_eligible"] == 1]
+        print(f"  {season}  dates {len(block):>5,}   giveaways {int(block['has_giveaway'].sum()):>4,}"
+              f"   eligible clubs {elig['team_id'].nunique():>3}"
+              f"   eligible giveaways {int(elig['has_giveaway'].sum()):>4,}")
+    print()
+    elig = out[out["analysis_eligible"] == 1]
+    print("analysis-eligible (full-season release for that club-season):")
     print(f"  home dates:          {len(elig):,}")
     print(f"  with a giveaway:     {int(elig['has_giveaway'].sum()):,}"
           f"  ({elig['has_giveaway'].mean():.1%})")
-    print(f"  clubs:               {elig['team_id'].nunique()}")
+    print(f"  club-seasons:        {elig.groupby(['team_id','season']).ngroups}")
+    print()
+    print("  midweek (Tue-Thu) giveaways, the displacement subsample:")
+    mid = elig[elig["day_of_week"].isin(["Tuesday", "Wednesday", "Thursday"])]
+    print(f"    treated {int(mid['has_giveaway'].sum()):,} of {len(mid):,} midweek dates")
     print()
     print(f"-> {out_path.relative_to(config.PROJECT_ROOT)}")
     print(f"-> {(config.DATA_PROCESSED / 'dim_date.csv').relative_to(config.PROJECT_ROOT)}")
