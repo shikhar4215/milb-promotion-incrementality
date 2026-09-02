@@ -1,0 +1,83 @@
+{
+  "name": "MiLB Attendance",
+  "dataColors": [
+    "#2a78d6", "#eb6834", "#1baf7a", "#eda100",
+    "#e87ba4", "#008300", "#4a3aa7", "#e34948"
+  ],
+  "background": "#fcfcfb",
+  "foreground": "#52514e",
+  "tableAccent": "#2a78d6",
+  "good": "#0ca30c",
+  "neutral": "#898781",
+  "bad": "#d03b3b",
+  "maximum": "#0d366b",
+  "center": "#f0efec",
+  "minimum": "#cde2fb",
+  "textClasses": {
+    "title":      { "fontSize": 14, "fontFace": "Segoe UI Semibold", "color": "#0b0b0b" },
+    "header":     { "fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#0b0b0b" },
+    "label":      { "fontSize": 10, "fontFace": "Segoe UI",          "color": "#52514e" },
+    "callout":    { "fontSize": 32, "fontFace": "Segoe UI",          "color": "#0b0b0b" },
+    "largeTitle": { "fontSize": 16, "fontFace": "Segoe UI Semibold", "color": "#0b0b0b" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background":  [{ "show": true, "color": { "solid": { "color": "#fcfcfb" } }, "transparency": 0 }],
+        "border":      [{ "show": true, "color": { "solid": { "color": "#e1e0d9" } }, "radius": 6 }],
+        "visualHeader":[{ "show": false }],
+        "title": [{
+          "show": true, "alignment": "left", "fontSize": 14,
+          "fontColor": { "solid": { "color": "#0b0b0b" } },
+          "background": { "solid": { "color": "#fcfcfb" } }
+        }],
+        "categoryAxis": [{
+          "showAxisTitle": true, "fontSize": 10, "gridlineShow": false,
+          "labelColor":  { "solid": { "color": "#898781" } },
+          "titleColor":  { "solid": { "color": "#52514e" } },
+          "lineColor":   { "solid": { "color": "#c3c2b7" } }
+        }],
+        "valueAxis": [{
+          "showAxisTitle": true, "fontSize": 10,
+          "gridlineShow": true, "gridlineThickness": 1,
+          "gridlineColor": { "solid": { "color": "#e1e0d9" } },
+          "labelColor":    { "solid": { "color": "#898781" } },
+          "titleColor":    { "solid": { "color": "#52514e" } },
+          "lineColor":     { "solid": { "color": "#c3c2b7" } }
+        }],
+        "legend": [{
+          "show": true, "position": "TopLeft", "showTitle": false, "fontSize": 10,
+          "labelColor": { "solid": { "color": "#52514e" } }
+        }],
+        "labels": [{
+          "show": false, "fontSize": 9,
+          "color": { "solid": { "color": "#52514e" } },
+          "labelDisplayUnits": 0, "labelPrecision": 0
+        }]
+      }
+    },
+    "card": {
+      "*": {
+        "labels":   [{ "fontSize": 30, "color": { "solid": { "color": "#0b0b0b" } }, "labelDisplayUnits": 0 }],
+        "categoryLabels": [{ "show": true, "fontSize": 10, "color": { "solid": { "color": "#898781" } } }]
+      }
+    },
+    "columnChart": { "*": { "labels": [{ "show": true, "labelDisplayUnits": 0, "labelPrecision": 0 }] } },
+    "barChart":    { "*": { "labels": [{ "show": true, "labelDisplayUnits": 0, "labelPrecision": 0 }] } },
+    "lineChart":   { "*": { "lineStyles": [{ "strokeWidth": 2, "showMarker": true, "markerSize": 5 }] } },
+    "tableEx": {
+      "*": {
+        "grid":         [{ "gridVertical": false, "gridHorizontalColor": { "solid": { "color": "#e1e0d9" } }, "rowPadding": 4 }],
+        "columnHeaders":[{ "fontColor": { "solid": { "color": "#0b0b0b" } }, "backColor": { "solid": { "color": "#f2f1ec" } }, "fontSize": 10 }],
+        "values":       [{ "fontColor": { "solid": { "color": "#52514e" } }, "fontSize": 10 }]
+      }
+    },
+    "slicer": {
+      "*": {
+        "header": [{ "show": true, "fontColor": { "solid": { "color": "#0b0b0b" } }, "fontSize": 10 }],
+        "items":  [{ "fontColor": { "solid": { "color": "#52514e" } }, "fontSize": 10 }]
+      }
+    },
+    "page": { "*": { "background": [{ "color": { "solid": { "color": "#f9f9f7" } }, "transparency": 0 }] } }
+  }
+}
