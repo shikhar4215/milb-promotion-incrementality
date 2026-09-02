@@ -25,7 +25,7 @@ import pandas as pd
 
 import config
 
-BI = config.DATA_PROCESSED / "bi"
+BI = config.DATA_PROCESSED / "bi_reference"
 
 
 def main() -> None:
