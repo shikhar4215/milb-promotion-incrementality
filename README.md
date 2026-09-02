@@ -153,14 +153,14 @@ temperature peaks at 75-85 degrees; sky conditions barely register.
 
 ![Attendance drivers](reports/dashboard/02-attendance-drivers.png)
 
-**The giveaway effect, and where it cannot be trusted.** Saturday carries the largest
-estimate and is the one night the placebo test cannot validate.
+**The giveaway effect, and where it cannot be trusted.** Saturday carries 43% of all
+treated dates and is the one night the placebo test cannot validate.
 
 ![Giveaway effect](reports/dashboard/03-giveaway-effect.png)
 
-**What survived specification and what did not.** The left chart is the reason the
-one-season displacement result was abandoned: on every night but Saturday there are
-several untreated dates for each treated one, and on Saturday there are fewer.
+**What survived specification and what did not.** The left chart is why the Saturday
+estimate still cannot be validated: on every other night there are two to four clean
+controls for each treated date, and on Saturday there are fewer controls than treated.
 
 ![Robustness](reports/dashboard/04-robustness.png)
 
